@@ -1,0 +1,6 @@
+classdef World < handle
+    properties
+        sprites (:, :) {mustBeInteger, mustBePositive} = ...
+            game.Sprites.EMPTY;
+        colliders (:, :) {mustBeInteger, mustBePositive} = ...
+            game.Sprites.EMPTY;
