@@ -1,3 +1,17 @@
+% NOTES ON VARIABLE NAMES (as I use them):
+%
+% `player` is a module, `plr` is an instance.
+% `world` is a module, `wld` is an instance.
+% `game` is a moudle, `gm` is an instance.
+%
+% Does not apply to object properties.
+
+% Anyway.
+% This is the main game class. Instantiating it will start the game.
+% This class contains the base methods that are called to perform context 
+%   switches. If any become long or complicated, consider breaking them into a
+%   separate file in +procedures/.
+
 classdef StudentLifeGame < handle
 
     properties
@@ -5,6 +19,7 @@ classdef StudentLifeGame < handle
         view (1, 1) game.View = game.View.TITLE;
         scenes (1, :) dictionary = dictionary(); % TODO: find elegant way to
                                                  %   check underlying type
+        worlds (1, :) 
     end
 
     methods
@@ -47,87 +62,14 @@ classdef StudentLifeGame < handle
             self.sge.drawScene(scene.bg, scene.fg);
         end
 
+        %% BEGIN 
+
         function title_screen(self)
-            arguments
-                self (1, 1) %StudentLifeGame
-            end
-
-            self.view = game.View.TITLE;
-            scene = self.scenes(self.view);
-
-            % Build the title screen UI
-            menu = spruiten.Menu();
-            pane = menu.Pane([4, 2], [15, 11]);
-            ticky_box = pane.Checkbox([3, 5]);
-
-            % Initial draw pass. Makes SGE open a figure, on which we install
-            %   the onclick handler
-            menu.draw(scene);
-            self.draw()
-
-            % Init: Start getting mouse inputs
-            % Comment out to stop clobbering SGE's builtin listener
-            %game.SgeShims.registerInputHandlers(self.sge.my_figure);
-
-            % Skip directly to world (remove when title screen is done)
-            self.world_engineering_core();
-
-            % Main title screen UI loop.
-            % The game is launched out of this loop. Execution here pauses, and
-            %   the primary in-world view launches its own loop.
-            % Execution of different views resembles a tree:
-            %
-            %                  title_screen()
-            %                        |
-            %                     world()
-            %                      / | \
-            %          ... various possible menus ...
-            %
-            % When a view closes, its function returns and execution control is
-            %   is handed back to the view that launched it.
-
-            while (1)
-                [clicked_widget, btn] = menu.next_clicked_widget(self.sge, scene);
-
-                if clicked_widget == ticky_box
-                    fprintf("tick!\n");
-                end
-
-                menu.draw(scene);
-
-                self.draw();
-            end
+            game.procedures.title_screen(self);
         end
 
-        function world_engineering_core(self)
-            arguments
-                self (1, 1) %StudentLifeGame
-            end
-
-            self.view = game.View.WORLD_ENGINEERING_CORE;
-            scene = self.scenes(self.view);
-
-            % Put loading gear in the middle of the scene
-            scene.fg(ceil(scene.HEIGHT/2), ceil(scene.WIDTH/2)) = game.Sprites.GEAR;
-            self.draw();
-
-            spritemap = load('maps/engineering_core.sprites.csv');
-
-            scene.fg(ceil(scene.HEIGHT/2), ceil(scene.WIDTH/2)) = game.Sprites.CHECKBOX_TRUE;
-            self.draw();
-
-            while (1)
-                key = getKeyboardInput(self.sge);
-
-                switch (key)
-                    case cfg.KEY_NORTH
-                        
-                    case cfg.KEY_SOUTH
-                        
-                end
-
-                self.draw();
-            end
+        function game_world(self, world)
+            game.procedures.game_world
         end
 
     end
