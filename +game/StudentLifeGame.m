@@ -62,14 +62,14 @@ classdef StudentLifeGame < handle
             self.sge.drawScene(scene.bg, scene.fg);
         end
 
-        %% BEGIN 
+        %% BEGIN breakout fns
 
         function title_screen(self)
             game.procedures.title_screen(self);
         end
 
         function game_world(self, world)
-            game.procedures.game_world
+            game.procedures.game_world(self, world);
         end
 
     end
