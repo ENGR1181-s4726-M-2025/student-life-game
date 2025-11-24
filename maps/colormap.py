@@ -15,7 +15,6 @@
 
 
 from spritemap import *
-from bldgmap import *
 
 ridx = lambda x: randint(0, x - 1)
 
@@ -33,10 +32,7 @@ def spritemap(rgb: int) -> int:
 
         # grass
         case 0x3fbf3f:
-            return GRASS0
-            """
-            return [GRASS_0, GRASS_1, GRASS_2, GRASS_#](ridx(4))
-            """
+            return [GRASS_0, GRASS_1NF, GRASS_2, GRASS_3][ridx(4)]
         # tree
         case 0x3f7f3f:
             return MISSING
@@ -59,37 +55,33 @@ def spritemap(rgb: int) -> int:
             return MISSING
 
 colliders = {
-        0x007fff:   "NORTH"
-        0x007ffe:   "KNOWLTON_HALL"
-        0x007ffd:   "ENARSON_CLASSROOM_BLDG"
-        0x007ffc:   "MCCRACKEN_POWER_PLANT"
-        0x007ffb:   "DREESE_LABS"
-        0x007ffa:   "BAKER_SYSTEMS"
-        0x007ff9:   "HITCHCOCK_HALL"
-        0x007ff8:   "BOLZ_HALL"
-        0x007ff7:   "CALDWELL_LABS"
-        0x007ff6:   "JOURNALISM_BLDG"
-        0x007ff5:   "COCKINS_HALL"
-        0x007ff4:   "MATHEMATICS_BLDG"
-        0x007ff3:   "MATHEMATICS_TOWER"
-        0x007ff2:   "SCOTT_LABS"
-        0x007ff1:   "PHYSICS_RESEARCH_BLDG"
-        0x007ff0:   "X_209_W_18TH"
-        0x007fef:   "X_18TH_AVE_LIBRARY"
-        0x007fee:   "SMITH_LABS"
-        0x007fed:   "CBEC"
-        0x007fec:   "FONTANA_LAB"
-        0x007feb:   "MCPHERSON_LAB"
-        0x007fea:   "CELESTE_LAB"
-        0x007fe9:   "STILLMAN_HALL"
-        0x007fe8:   "OXLEYS"
+        0x007fff:   "NORTH",
+        0x007ffe:   "KNOWLTON_HALL",
+        0x007ffd:   "ENARSON_CLASSROOM_BLDG",
+        0x007ffc:   "MCCRACKEN_POWER_PLANT",
+        0x007ffb:   "DREESE_LABS",
+        0x007ffa:   "BAKER_SYSTEMS",
+        0x007ff9:   "HITCHCOCK_HALL",
+        0x007ff8:   "BOLZ_HALL",
+        0x007ff7:   "CALDWELL_LABS",
+        0x007ff6:   "JOURNALISM_BLDG",
+        0x007ff5:   "COCKINS_HALL",
+        0x007ff4:   "MATHEMATICS_BLDG",
+        0x007ff3:   "MATHEMATICS_TOWER",
+        0x007ff2:   "SCOTT_LABS",
+        0x007ff1:   "PHYSICS_RESEARCH_BLDG",
+        0x007ff0:   "X_209_W_18TH",
+        0x007fef:   "X_18TH_AVE_LIBRARY",
+        0x007fee:   "SMITH_LABS",
+        0x007fed:   "CBEC",
+        0x007fec:   "FONTANA_LAB",
+        0x007feb:   "MCPHERSON_LAB",
+        0x007fea:   "CELESTE_LAB",
+        0x007fe9:   "STILLMAN_HALL",
+        0x007fe8:   "OXLEYS",
 }
 
 
 
 def collidermap(rgb: int) -> int:
-    try:
-        return colliders[rgb]
-    except:
-        return 0
-
+    return rgb if rgb in colliders.keys() else 0

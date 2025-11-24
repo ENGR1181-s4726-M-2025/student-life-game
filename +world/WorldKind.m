@@ -1,0 +1,9 @@
+% You may have to use maps/generate.py to make these files
+classdef(Enumeration) WorldKind
+    enumeration
+        ENGINEERING_CORE ( ...
+            'assets/engineering_core.sprites.csv', ...
+            'assets/engineering_core_colliders.colliders.csv' ...
+        )
+    end
+end
