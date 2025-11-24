@@ -14,9 +14,5 @@ classdef ViewScene < handle
         HEIGHT = 25;
         WIDTH = 35;
     end
-
-    methods
-
-    end
 end
 
