@@ -26,9 +26,7 @@ classdef StudentLifeGame < handle
         worlds (1, :) dictionary = dictionary(); % "
         player (1, 1); %player.Player
 
-        % Time of day, in minutes since midnight on Day 1.
-        % TODO: replace with class that stores all time, date, and calendar info
-        time (1, 1) uint32 {mustBeInteger, mustBeNonnegative} = 8 * 60;
+        time (1, 1) game.Time;
     end
 
     methods
@@ -61,9 +59,13 @@ classdef StudentLifeGame < handle
             self.loading_gear();
 
             % Create player
+            self.player = player.Player();
 
             % Load worlds
-
+            world_kinds = enumeration('game.View'); % TODO: find a better way
+            for i = 1:length(view_kinds)
+                self.scenes(view_kinds(i)) = game.ViewScene;
+            end
 
             self.remove_loading_gear();
 
@@ -117,25 +119,6 @@ classdef StudentLifeGame < handle
             end
 
             self.draw();
-        end
-
-        % return the current time as a char vector like 'HH:MM'
-        function current_time_chars = print_time(self)
-            arguments
-                self (1, 1) %player.Player
-            end
-            
-            current_time_chars = char(sprintf("%02d:%02d", self.hrs_mins()));
-        end
-
-        % return the current time as a pair [hours, minutes]
-        function [hrs, mins] = hrs_mins(self)
-            arguments
-                self (1, 1) %player.Player
-            end
-
-            hrs = mod(idivide(self.time, uint32(60)), 24);
-            mins = mod(self.time, uint32(60));
         end
 
         %% BEGIN breakout fns
