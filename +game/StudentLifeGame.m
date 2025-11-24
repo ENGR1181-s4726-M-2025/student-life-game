@@ -1,25 +1,34 @@
 % NOTES ON VARIABLE NAMES (as I use them):
 %
-% `player` is a module, `plr` is an instance.
-% `world` is a module, `wld` is an instance.
-% `game` is a moudle, `gm` is an instance.
+% In cases where a module name clashes with a common var name, abbreviated forms
+%   refer to instances.
+%
+% `player` is a module, `plr` is an instance of Player.
+% `world` is a module, `wld` is an instance of World.
+% `game` is a moudle, `gm` is an instance of StudentLifeGame.
 %
 % Does not apply to object properties.
 
 % Anyway.
 % This is the main game class. Instantiating it will start the game.
-% This class contains the base methods that are called to perform context 
+% Contains a bunch of methods to interact with global state.
+% This class also contains the base methods that are called to perform context 
 %   switches. If any become long or complicated, consider breaking them into a
 %   separate file in +procedures/.
 
 classdef StudentLifeGame < handle
 
     properties
-        sge (1, 1);% game.simpleGameEngine;
+        sge (1, 1); %game.simpleGameEngine
         view (1, 1) game.View = game.View.TITLE;
         scenes (1, :) dictionary = dictionary(); % TODO: find elegant way to
                                                  %   check underlying type
-        worlds (1, :) 
+        worlds (1, :) dictionary = dictionary(); % "
+        player (1, 1); %player.Player
+
+        % Time of day, in minutes since midnight on Day 1.
+        % TODO: replace with class that stores all time, date, and calendar info
+        time (1, 1) uint32 {mustBeInteger, mustBeNonnegative} = 8 * 60;
     end
 
     methods
@@ -34,7 +43,7 @@ classdef StudentLifeGame < handle
                 zoom_factor (1, 1) {mustBeInteger, mustBePositive}
             end
             
-            % Init: SGE
+            % Init SGE
             self.sge = game.simpleGameEngine( ...
                 spritesheet, ...
                 sprite_size(1), ...
@@ -43,13 +52,35 @@ classdef StudentLifeGame < handle
                 [0, 0, 0] ... % black background by default
             );
 
-            % Create: Views
+            % Create Views
             view_kinds = enumeration('game.View'); % TODO: find a better way
             for i = 1:length(view_kinds)
                 self.scenes(view_kinds(i)) = game.ViewScene;
             end
 
-            self.title_screen();
+            self.loading_gear();
+
+            % Create player
+
+            % Load worlds
+
+
+            self.remove_loading_gear();
+
+            % Main game loop.
+            % Many of the other View procedures have their own loops.
+            % Switch views by modifying self.view and returning out of that 
+            %   function.
+            while (true)
+                switch (self.view)
+                    case game.View.TITLE
+                        self.title_screen();
+                    case game.View.WORLD
+                        self.game_world(self.player.world);
+                    otherwise
+                        error("Could not select invalid View %s", self.view);
+                end
+            end
         end
 
         % Render the currently selected View
@@ -60,6 +91,51 @@ classdef StudentLifeGame < handle
 
             scene = self.scenes(self.view);
             self.sge.drawScene(scene.bg, scene.fg);
+        end
+
+        % Shows a gear in the middle of the current scene until execution 
+        %   completes
+        function loading_gear(self)
+            scene = self.scenes(self.view);
+            midpt = ceil(size(scene.fg) / 2);
+            scene.fg(midpt(1), midpt(2)) = game.Sprites.GEAR;
+
+            self.draw();
+        end
+
+        % Eliminates an existing loading gear.
+        %   This fn is separate becuase loading may lead directly to a full
+        %   redraw, in which case it would be inefficient to delete the
+        %   gear from the scene and call a draw when we're just going to
+        %   redraw everything anyway.
+        function remove_loading_gear(self)
+            scene = self.scenes(self.view);
+            midpt = ceil(size(scene.fg) / 2);
+
+            if scene.fg(midpt(1), midpt(2)) == game.Sprites.GEAR
+                scene.fg(midpt(1), midpt(2)) = game.Sprites.EMPTY;
+            end
+
+            self.draw();
+        end
+
+        % return the current time as a char vector like 'HH:MM'
+        function current_time_chars = print_time(self)
+            arguments
+                self (1, 1) %player.Player
+            end
+            
+            current_time_chars = char(sprintf("%02d:%02d", self.hrs_mins()));
+        end
+
+        % return the current time as a pair [hours, minutes]
+        function [hrs, mins] = hrs_mins(self)
+            arguments
+                self (1, 1) %player.Player
+            end
+
+            hrs = mod(idivide(self.time, uint32(60)), 24);
+            mins = mod(self.time, uint32(60));
         end
 
         %% BEGIN breakout fns
