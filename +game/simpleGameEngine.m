@@ -226,9 +226,22 @@ classdef simpleGameEngine < handle
             
             % Bring this scene to focus
             figure(obj.my_figure);
+
+            %% BEGIN ALEX CHANGES
+            % prevents the getMouseInput from crashing if the user presses Enter
+            X = [];
+            Y = [];
+            button = [];
             
+            while isempty(X) | isempty(Y) | isempty(button)
+            %% END ALEX CHANGES
+
             % Get the user mouse input
             [X,Y,button] = ginput(1);
+
+            %% BEGIN ALEX CHANGES
+            end
+            %% END ALEX CHANGES
             
             % Convert this into the tile row/column
             row = ceil(Y/obj.sprite_height/obj.zoom);
