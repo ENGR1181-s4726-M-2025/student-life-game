@@ -2,7 +2,7 @@
 % Colllection of static methods to make drawing menus easier
 classdef Pane < handle
     properties
-        widgets (1, :) = []; %spruiten.Widget = [];
+        widgets (1, :) spruiten.Widget = spruiten.Widget.empty;
         pos (1, 2) {mustBeInteger, mustBePositive} = [1, 1];
         dims (1, 2) {mustBeInteger, mustBePositive} = [1, 1];
     end
@@ -19,7 +19,7 @@ classdef Pane < handle
             end
 
             self.pos = pos;
-            self.dims = dims;
+            self.dims = dims - 1;
         end
 
         % Test if a point is within the bounds (INCLUDING EDGES) of this Pane
@@ -41,7 +41,7 @@ classdef Pane < handle
                 point (1, 2) {mustBeInteger, mustBePositive}
             end
             
-            absolute = self.pos + 1 + point;
+            absolute = self.pos + point;
         end
 
         % Turn a global sprite coordinate into a pane-relative one
@@ -51,7 +51,7 @@ classdef Pane < handle
                 point (1, 2) {mustBeInteger, mustBePositive}
             end
             
-            relative = point - (self.pos + 1);
+            relative = point - self.pos;
         end
 
         % Mouse click handler
@@ -130,6 +130,10 @@ classdef Pane < handle
                 w = self.widgets(i);
                 wpos = self.abs_pos(w.pos);
 
+                % trial and error index magic
+                % i think the -1 on each dimension accounts for the
+                %   pane-relative origin being (1, 1)
+                % we have to do the same thing with clicks
                 scene.fg( ...
                     wpos(1) : wpos(1) + w.dims(1) - 1, ...
                     wpos(2) : wpos(2) + w.dims(2) - 1 ...
@@ -137,7 +141,18 @@ classdef Pane < handle
             end
         end
 
+        % Safely add a widget to this Pane
+        function insert_widget(self, wid)
+            %if isempty(self.widgets)
+                %self.widgets = wid;
+            %else
+                self.widgets = horzcat(self.widgets, wid);
+            %end
+        end
+
         %% BEGIN Pre-attached Widget constructors, for convenience
+        % Input validation not needed because it is performed within the widget
+        %   constructor
 
         function new = Checkbox(self, pos, ticked)
             if nargin < 3
@@ -145,7 +160,12 @@ classdef Pane < handle
             end
 
             new = spruiten.widgets.Checkbox(pos, ticked);
-            self.widgets = [self.widgets new];
+            self.insert_widget(new);
+        end
+
+        function new = Text(self, pos, content)
+            new = spruiten.widgets.Text(pos, content);
+            self.insert_widget(new);
         end
     end
 end

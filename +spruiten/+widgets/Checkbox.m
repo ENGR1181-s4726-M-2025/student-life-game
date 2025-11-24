@@ -1,8 +1,10 @@
 classdef Checkbox < spruiten.Widget
     properties
-        pos = [1, 1]; % validation on inherited properties is broken R2024b
-        dims = [1, 1]; % "
         ticked (1, 1) logical = false;
+
+        % Defined in Widget. See spruiten.Wdiget for explanation
+        %pos = [1, 1]; % validation on inherited properties is broken R2024b
+        %dims = [1, 1]; % "
     end
 
     methods

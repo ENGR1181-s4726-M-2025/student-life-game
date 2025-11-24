@@ -8,8 +8,10 @@ function title_screen(gm)
 
     % Build the title screen UI
     menu = spruiten.Menu();
-    pane = menu.Pane([4, 2], [15, 11]);
-    ticky_box = pane.Checkbox([3, 5]);
+    pane = menu.Pane([2, 2], [23, 16]);
+    pane2 = menu.Pane([2, 19], [23, 16]);
+    ticky_box = pane.Checkbox([3, 10]);
+    pane.Text([3, 1], 'CHECKBOX');
 
     % Initial draw pass. Makes SGE open a figure, on which we install
     %   the onclick handler
@@ -21,7 +23,7 @@ function title_screen(gm)
     %game.SgeShims.registerInputHandlers(self.sge.my_figure);
 
     % temp: Skip directly to world (remove when title screen is done)
-    gm.game_world();
+    %gm.game_world();
 
     % Main title screen UI loop.
     % The game is launched out of this loop. Execution here pauses, and
