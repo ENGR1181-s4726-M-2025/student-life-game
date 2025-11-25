@@ -13,6 +13,7 @@
 # Performing that selection logic in this file rather than at runtime saves a
 #   huge amount of effort overall, though.
 
+from random import randint
 
 from spritemap import *
 
@@ -25,19 +26,16 @@ def spritemap(rgb: int) -> int:
 
         # road
         case 0x3f3f3f:
-            return MISSING
-            """
             return ROAD
-            """
 
         # grass
         case 0x3fbf3f:
-            return [GRASS_0, GRASS_1NF, GRASS_2, GRASS_3][ridx(4)]
+            return [GRASS0, GRASS1NF, GRASS2, GRASS3][ridx(4)]
         # tree
         case 0x3f7f3f:
             return MISSING
             """
-            return [TREE_0, TREE_1, TREE_2](ridx(3))
+            return [TREE0, TREE1, TREE2][ridx(3)]
             """
 
         # building
@@ -49,7 +47,16 @@ def spritemap(rgb: int) -> int:
             )
             """
 
-        # 
+        # path
+        case 0x7f7f7f:
+            return TILEBROWNSMALL
+
+        # concrete
+        case 0xbfbf7f:
+            return MISSING
+            """
+            return [CONCRETE0, CONCRETE1, CONCRETE2, CONCRETE3][ridx(3)]
+            """
 
         case _:
             return MISSING
@@ -79,9 +86,12 @@ colliders = {
         0x007fea:   "CELESTE_LAB",
         0x007fe9:   "STILLMAN_HALL",
         0x007fe8:   "OXLEYS",
+        0x7f3f7f:   "WALL",
+        0xffffff:   "BARRIER",
+        0x7f7f7f:   "PATH",
 }
 
 
 
 def collidermap(rgb: int) -> int:
-    return rgb if rgb in colliders.keys() else 0
+    return rgb if rgb in colliders.keys() else rgb

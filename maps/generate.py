@@ -25,13 +25,13 @@ except:
 
 script_dir = path.dirname(__file__);
 world_map_path = path.join(
-    #path.dirname(path.realpath(script_dir)),
-    script_dir,
-    "%s.%s.csv" % (argv[1][:-4], 'sprites' if argv[2] == "s" else 'colliders')
+    path.dirname(path.realpath(script_dir)),
+    #script_dir,
+    "%s.%s.csv" % (argv[1][:-4], 'sprites' if mode == "s" else 'colliders')
 )
 
 # Mapping function from pixel RGB to id
-mapc = spritemap if argv[2] == "s" else collidermap
+mapc = spritemap if mode == "s" else collidermap
 
 im = Image.open(argv[1])
 w, h = im.size
@@ -41,14 +41,20 @@ with open(world_map_path, "w") as wm:#, open(collider_map_path, "w")
         row = []
 
         for x in range(w):
-            r, g, b, _ = im.getpixel((x, y))
+            r, g, b = im.getpixel((x, y))
             rgb = (r << 16) + (g << 8) + b
             
             row.append("%d" % mapc(rgb))
 
         print(",".join(row), file=wm)
+    print(
+        "-- Mapped %d pixels into %s" % (
+            im.size[0] * im.size[1],
+            world_map_path
+        )
+    )
 
-if argv[2][0] == "c":
+if mode == "c":
     collider_id_map_path = path.join(
         path.dirname(path.realpath(script_dir)),
         "+world/Collider.m"
@@ -68,11 +74,16 @@ if argv[2][0] == "c":
 
         for (rgbid, name) in colliders.items():
             print(
-                "        %s = %d" % (name, rgbid),
+                "        %s (%d)" % (name, rgbid),
                 file=cidm
             )
+
+        # static entry for the un-collider
+        print("        EMPTY (0)", file=cidm)
 
         cidm.writelines([
                 "   end\n",
                 "end\n"
         ])
+
+    print("-- Generated %d entries in %s" % (len(colliders), collider_id_map_path));
