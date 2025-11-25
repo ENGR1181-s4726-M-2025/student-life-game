@@ -5,6 +5,7 @@
 
 classdef Widget < handle & matlab.mixin.Heterogeneous
     properties
+        bg (1, 1) {mustBeInteger, mustBeNonnegative} = 0;
         % These should not have default values
         pos (1, 2) {mustBeInteger, mustBePositive} = [1, 1];
         dims (1, 2) {mustBeInteger, mustBePositive} = [1, 1];
@@ -22,5 +23,10 @@ classdef Widget < handle & matlab.mixin.Heterogeneous
 
         % Point inside bounds of this Widget
         encloses(self, point)
+
+        % Set sprite to draw as background to this widget
+        function self = set_background(self, sprite)
+            self.bg = sprite;
+        end
     end
 end

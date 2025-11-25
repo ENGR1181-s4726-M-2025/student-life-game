@@ -41,7 +41,8 @@ classdef Text < spruiten.Widget
             '!',    game.Sprites.GLYPH_EXCLAMATION_MARK, ...
             '.',    game.Sprites.GLYPH_POINT, ...
             ',',    game.Sprites.GLYPH_COMMA, ...
-            ':',    game.Sprites.GLYPH_COLON ...
+            ':',    game.Sprites.GLYPH_COLON, ...
+            ' ',    game.Sprites.EMPTY ...
         );
     end
     properties
@@ -83,13 +84,13 @@ classdef Text < spruiten.Widget
             end
         end
 
-        function res = encloses(self, point) %#ok<INUSD> required by Widget class
-            res = false; % Text is not clickable
+        function res = encloses(self, point)
+            res = all(self.pos <= point) && all(point < (self.pos + self.dims));
         end
 
         function self_ref = set_content(self, content)
             arguments
-                self (1, 1) spruiten.Widgets.Text
+                self (1, 1) %spruiten.Widgets.Text
                 content (:, :) char
             end
 
