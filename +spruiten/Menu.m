@@ -13,11 +13,10 @@ classdef Menu < handle
         
         % Wait for the next input event, execute appropriate listeners, and 
         %   return a handle to any widgets clicked
-        function [widget, btn] = next_clicked_widget(self, sge, scene)
+        function [widget, btn] = next_clicked_widget(self, sge)
             arguments
                 self (1, 1) %spruiten.Menu
                 sge (1, 1) %game.simpleGameEngine
-                scene (1, 1) game.ViewScene
             end
 
             % Hang until the user clicks something that can actually be clicked
@@ -74,7 +73,11 @@ classdef Menu < handle
         % Create a new pane in this Menu
         function new = Pane(self, pos, dims)
             new = spruiten.Pane(pos, dims);
-            self.panes = [self.panes new];
+            self.panes = [new self.panes];
+        end
+
+        function pane = pane(self, pane)
+            self.panes = [new self.panes];
         end
     end
 end

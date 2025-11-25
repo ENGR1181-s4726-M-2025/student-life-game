@@ -6,6 +6,13 @@ function title_screen(gm)
     gm.view = game.View.TITLE;
     scene = gm.scenes(gm.view);
 
+    % Init: Start getting mouse inputs
+    % Comment out to stop clobbering SGE's builtin listener
+    %game.SgeShims.registerInputHandlers(self.sge.my_figure);
+
+    % temp: Skip directly to world (remove when title screen is done)
+    gm.game_world();
+
     % Build the title screen UI
     menu = spruiten.Menu();
     pane = menu.Pane([2, 2], [23, 16]);
@@ -16,14 +23,8 @@ function title_screen(gm)
     % Initial draw pass. Makes SGE open a figure, on which we install
     %   the onclick handler
     menu.draw(scene);
-    gm.draw()
+    gm.draw();
 
-    % Init: Start getting mouse inputs
-    % Comment out to stop clobbering SGE's builtin listener
-    %game.SgeShims.registerInputHandlers(self.sge.my_figure);
-
-    % temp: Skip directly to world (remove when title screen is done)
-    %gm.game_world();
 
     % Main title screen UI loop.
     % The game is launched out of this loop. Execution here pauses, and

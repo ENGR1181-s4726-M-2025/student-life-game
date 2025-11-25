@@ -40,7 +40,7 @@ classdef Time < handle
         end
 
         % step time by some seconds
-        function time_step(self, secs)
+        function step(self, secs)
             arguments
                 self (1, 1) game.Time
                 secs (1, 1) uint32

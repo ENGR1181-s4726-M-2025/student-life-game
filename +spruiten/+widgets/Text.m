@@ -40,7 +40,8 @@ classdef Text < spruiten.Widget
             '&',    game.Sprites.GLYPH_AMPERSAND, ...
             '!',    game.Sprites.GLYPH_EXCLAMATION_MARK, ...
             '.',    game.Sprites.GLYPH_POINT, ...
-            ',',    game.Sprites.GLYPH_COMMA ...
+            ',',    game.Sprites.GLYPH_COMMA, ...
+            ':',    game.Sprites.GLYPH_COLON ...
         );
     end
     properties
@@ -54,17 +55,12 @@ classdef Text < spruiten.Widget
     methods
 
         % Use single quotes when passing `content`
-        function self = Text(pos, content)
+        function self = Text(pos)
             arguments
                 pos (1, 2) {mustBeInteger, mustBePositive}
-                content (:, :) char
             end
 
-            content = upper(char(content));
-
             self.pos = pos;
-            self.content = content;
-            self.dims = size(content);
         end
 
         function click(self, btn) %#ok<INUSD> required by Widget class
@@ -82,13 +78,27 @@ classdef Text < spruiten.Widget
 
             for row = 1:self.dims(1) % lines/rows
                 for col = 1:self.dims(2) % chars/cols
-                    sprites(row, col) = spruiten.widgets.Text.GLYPHS(self.content(row, col));
+                    sprites(row, col) = spruiten.widgets.Text.GLYPHS(string(self.content(row, col)));
                 end
             end
         end
 
         function res = encloses(self, point) %#ok<INUSD> required by Widget class
             res = false; % Text is not clickable
+        end
+
+        function self_ref = set_content(self, content)
+            arguments
+                self (1, 1) spruiten.Widgets.Text
+                content (:, :) char
+            end
+
+            content = upper(char(content));
+
+            self.content = content;
+            self.dims = size(content);
+            
+            self_ref = self;
         end
     end
 end

@@ -5,6 +5,8 @@ classdef Pane < handle
         widgets (1, :) spruiten.Widget = spruiten.Widget.empty;
         pos (1, 2) {mustBeInteger, mustBePositive} = [1, 1];
         dims (1, 2) {mustBeInteger, mustBePositive} = [1, 1];
+        visible (1, 1) logical = true; % whether to draw this Pane / accept 
+                                       %   clicks
     end
 
     methods
@@ -154,18 +156,19 @@ classdef Pane < handle
         % Input validation not needed because it is performed within the widget
         %   constructor
 
-        function new = Checkbox(self, pos, ticked)
-            if nargin < 3
-                ticked = false;
-            end
-
-            new = spruiten.widgets.Checkbox(pos, ticked);
+        function new = Checkbox(self, pos)
+            new = spruiten.widgets.Checkbox(pos);
             self.insert_widget(new);
         end
 
-        function new = Text(self, pos, content)
-            new = spruiten.widgets.Text(pos, content);
+        function new = Text(self, pos)
+            new = spruiten.widgets.Text(pos);
             self.insert_widget(new);
+        end
+
+        % Insert a widget and return it back
+        function wid = widget(self, wid)
+            self.insert_widget(wid)
         end
     end
 end

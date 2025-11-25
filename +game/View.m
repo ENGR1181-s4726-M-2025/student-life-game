@@ -3,7 +3,7 @@
 classdef(Enumeration) View
     enumeration
         TITLE
-        WORLD_ENGINEERING_CORE
+        WORLD
         CALENDAR
         MAP
         TASK

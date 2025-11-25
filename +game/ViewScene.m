@@ -14,5 +14,15 @@ classdef ViewScene < handle
         HEIGHT = 25;
         WIDTH = 35;
     end
+
+    methods
+        function midpt = midpoint(self)
+            arguments
+                self (1, 1) game.ViewScene
+            end
+            
+            midpt = ceil(size(self.fg) / 2);
+        end
+    end
 end
 

@@ -21,9 +21,12 @@ classdef StudentLifeGame < handle
     properties
         sge (1, 1); %game.simpleGameEngine
         view (1, 1) game.View = game.View.TITLE;
-        scenes (1, :) dictionary = dictionary(); % TODO: find elegant way to
+        scenes (1, :) dictionary = dictionary();% TODO: find elegant way to
+                                                 %   check underlying type 
+
+        world (1, 1) world.WorldKind = world.WorldKind.ENGINEERING_CORE;
+        worlds (1, :) dictionary = dictionary(); % TODO: find elegant way to
                                                  %   check underlying type
-        worlds (1, :) dictionary = dictionary(); % "
         player (1, 1); %player.Player
 
         time (1, 1) game.Time;
@@ -61,10 +64,21 @@ classdef StudentLifeGame < handle
             % Create player
             self.player = player.Player();
 
+            % New clock. State gets stuck if we don't make a new one
+            self.time = game.Time();
+
             % Load worlds
-            world_kinds = enumeration('game.View'); % TODO: find a better way
-            for i = 1:length(view_kinds)
-                self.scenes(view_kinds(i)) = game.ViewScene;
+            world_kinds = enumeration('world.WorldKind');
+
+            for i = 1:length(world_kinds)
+                kind = world_kinds(i);
+                self.worlds(kind) = world.World();
+
+                self.worlds(kind).sprites = load( ...
+                    world.WorldKind.SPRITES(kind));
+
+                self.worlds(kind).colliders = load( ...
+                    world.WorldKind.COLLIDERS(kind));
             end
 
             self.remove_loading_gear();
@@ -99,7 +113,7 @@ classdef StudentLifeGame < handle
         %   completes
         function loading_gear(self)
             scene = self.scenes(self.view);
-            midpt = ceil(size(scene.fg) / 2);
+            midpt = scene.midpoint();
             scene.fg(midpt(1), midpt(2)) = game.Sprites.GEAR;
 
             self.draw();
@@ -112,7 +126,7 @@ classdef StudentLifeGame < handle
         %   redraw everything anyway.
         function remove_loading_gear(self)
             scene = self.scenes(self.view);
-            midpt = ceil(size(scene.fg) / 2);
+            midpt = scene.midpoint();
 
             if scene.fg(midpt(1), midpt(2)) == game.Sprites.GEAR
                 scene.fg(midpt(1), midpt(2)) = game.Sprites.EMPTY;
@@ -127,8 +141,8 @@ classdef StudentLifeGame < handle
             game.procedures.title_screen(self);
         end
 
-        function game_world(self, world)
-            game.procedures.game_world(self, world);
+        function game_world(self)
+            game.procedures.game_world(self);
         end
 
     end
