@@ -49,7 +49,7 @@ def spritemap(rgb: int) -> int:
 
         # path
         case 0x7f7f7f:
-            return TILEBROWNSMALL
+            return STONEBRICK #TILEBROWNSMALL
 
         # concrete
         case 0xbfbf7f:
