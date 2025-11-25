@@ -93,6 +93,8 @@ classdef StudentLifeGame < handle
                         self.title_screen();
                     case game.View.WORLD
                         self.game_world(self.player.world);
+                    case game.View.SCHEDULING
+                        self.scheduling();
                     otherwise
                         error("Could not select invalid View %s", self.view);
                 end
@@ -143,6 +145,10 @@ classdef StudentLifeGame < handle
 
         function game_world(self)
             game.procedures.game_world(self);
+        end
+
+        function scheduling(self)
+            game.procedures.scheduling(self);
         end
 
     end

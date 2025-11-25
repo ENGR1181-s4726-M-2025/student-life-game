@@ -173,8 +173,8 @@ classdef Pane < handle
             self.insert_widget(new);
         end
 
-        % Insert a widget and return it back
-        function wid = widget(self, wid)
+        % Insert a widget and return this pane again (for chain adding)
+        function self = widget(self, wid)
             self.insert_widget(wid)
         end
     end

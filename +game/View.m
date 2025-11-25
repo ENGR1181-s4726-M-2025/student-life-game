@@ -7,5 +7,6 @@ classdef(Enumeration) View
         CALENDAR
         MAP
         TASK
+        SCHEDULING
     end
 end
