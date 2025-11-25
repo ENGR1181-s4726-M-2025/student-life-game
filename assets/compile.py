@@ -109,4 +109,6 @@ for i in range(
 ):
     im.paste(sprite_missing, (xpos(i), ypos(i)))
 
-im.save(os.path.join(script_dir, "sheet.png"))
+sheet_path = os.path.join(script_dir, "sheet.png")
+im.save(sheet_path)
+print("-- Compiled %d sprites into %s" % (num_sprites, sheet_path))
