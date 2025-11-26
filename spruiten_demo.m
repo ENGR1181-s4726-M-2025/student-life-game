@@ -44,7 +44,7 @@ while (true)
                                                  % the text
         text_1.set_white(true); % use white text, for contrast
     else
-        text_1.set_background(0); % remove red background
+        text_1.set_background(false); % remove red background
         text_1.set_white(false); % use black text
     end
 end
